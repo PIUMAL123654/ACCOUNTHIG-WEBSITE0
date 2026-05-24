@@ -1,0 +1,131 @@
+/* Custom Global Styles for ABC PVT.LTD POS & Accounting */
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(79, 70, 229, 0.15);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(79, 70, 229, 0.3);
+}
+
+/* Sidebar Active Class Styling */
+.nav-item.active {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: #ffffff;
+    border-left: 4px solid #6366f1;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    padding-left: calc(1rem - 4px);
+}
+
+.dark .nav-item.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0.08) 100%);
+    color: #818cf8;
+}
+
+/* Tab Switching Fade Animation */
+.tab-view {
+    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Micro-animations */
+.hover-grow {
+    transition: transform 0.2s ease-in-out;
+}
+.hover-grow:hover {
+    transform: translateY(-2px) scale(1.01);
+}
+
+/* Custom Grid Items */
+.pos-product-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pos-product-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.05);
+}
+
+/* Payment Method Active Button */
+.btn-pay-method.active {
+    background-color: #6366f1 !important;
+    border-color: #4f46e5 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+/* ==================== PRINT MEDIA QUERIES ==================== */
+@media print {
+    /* Hide everything by default for print */
+    body * {
+        visibility: hidden;
+    }
+    
+    /* Show ONLY the designated printable area */
+    #receipt-print-area, #receipt-print-area * {
+        visibility: visible;
+    }
+    
+    #receipt-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Print styling specifically for P&L Statement */
+    .print-pl-active #pl-print-area, .print-pl-active #pl-print-area * {
+        visibility: visible;
+    }
+
+    .print-pl-active #pl-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Ensure background elements can print colors if user enables background printing */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

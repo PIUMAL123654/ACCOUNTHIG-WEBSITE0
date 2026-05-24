@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC PVT.LTD - Supermarket POS & Accounting</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        },
+                        glass: {
+                            light: 'rgba(255, 255, 255, 0.08)',
+                            dark: 'rgba(15, 23, 42, 0.6)',
+                        }
+                    },
+                    boxShadow: {
+                        'glass-sm': '0 2px 10px 0 rgba(31, 38, 135, 0.07)',
+                        'glass-md': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                        'glass-lg': '0 8px 32px 0 rgba(0, 0, 0, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col antialiased">
+
+    <!-- App Wrapper -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-slate-900 border-r border-slate-800 text-slate-300 flex flex-col z-30 transition-all duration-300 flex-shrink-0">
+            <!-- Sidebar Header -->
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white p-1 rounded-xl shadow-lg flex items-center justify-center">
+                        <img src="logo.png" alt="ABC Logo" class="w-7 h-7 object-contain">
+                    </div>
+                    <div>
+                        <h1 class="font-outfit font-bold text-white text-lg tracking-wide leading-tight">ABC PVT.LTD</h1>
+                        <span class="text-xs text-brand-400 font-medium tracking-wider uppercase">Supermarket</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Items -->
+            <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+                <a href="#" data-tab="dashboard" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Dashboard</span>
+                </a>
+                <a href="#" data-tab="pos" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">POS Terminal</span>
+                </a>
+                <a href="#" data-tab="inventory" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="package" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Inventory Manager</span>
+                </a>
+                <a href="#" data-tab="purchases" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="truck" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Purchases (Restock)</span>
+                </a>
+                <a href="#" data-tab="ledger" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Accounts Ledger</span>
+                </a>
+                <a href="#" data-tab="coa" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Chart of Accounts</span>
+                </a>
+                <a href="#" data-tab="reports" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800/50">
+                    <i data-lucide="line-chart" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Reports & P&L</span>
+                </a>
+            </nav>
+            
+            <!-- Sidebar Footer / Quick Info -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+                <div class="flex items-center gap-3 rounded-lg p-2 hover:bg-slate-800/30">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-white">Administrator</div>
+                        <div class="text-[10px] text-slate-500">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Top Navbar -->
+            <header class="h-16 border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-6 z-20">
+                <div class="flex items-center gap-4">
+                    <!-- Collapse Button -->
+                    <button id="sidebar-toggle" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Current View Title -->
+                    <h2 id="view-title" class="font-outfit font-semibold text-lg text-slate-800 dark:text-white">Dashboard</h2>
+                </div>
+                
+                <!-- Quick controls -->
+                <div class="flex items-center gap-4">
+                    <!-- Demo Mock Data Button -->
+                    <button id="btn-generate-mock" class="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-lg font-medium text-xs shadow-md shadow-emerald-500/10 transition-all hover:scale-105 active:scale-95">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <span>Generate Demo Data</span>
+                    </button>
+                    
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    </button>
+                    
+                    <!-- Live Clock -->
+                    <div class="text-right hidden sm:block">
+                        <div id="live-time" class="text-sm font-semibold dark:text-slate-200">12:34 PM</div>
+                        <div id="live-date" class="text-[10px] text-slate-500">24th May, 2026</div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dynamic Content Pane -->
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-slate-50/50 dark:bg-slate-950/20">
+                
+                <!-- ==================== DASHBOARD VIEW ==================== -->
+                <div id="view-dashboard" class="tab-view space-y-6">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+                        <!-- Revenue Card -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-emerald-500/10 dark:text-emerald-500/5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="trending-up" class="w-24 h-24"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Sales</span>
+                            <h3 id="stat-sales" class="text-2xl font-bold font-outfit text-slate-800 dark:text-white mt-2">LKR 0.00</h3>
+                            <div class="flex items-center gap-1 text-emerald-500 text-xs font-semibold mt-2">
+                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                                <span>Wholesale & Retail combined</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cost of Goods Sold (COGS) Card -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-amber-500/10 dark:text-amber-500/5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="shopping-bag" class="w-24 h-24"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">COGS (Stock Cost)</span>
+                            <h3 id="stat-cogs" class="text-2xl font-bold font-outfit text-slate-800 dark:text-white mt-2">LKR 0.00</h3>
+                            <div class="flex items-center gap-1 text-amber-500 text-xs font-semibold mt-2">
+                                <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+                                <span>Cost of sold items</span>
+                            </div>
+                        </div>
+
+                        <!-- Expenses Card -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-red-500/10 dark:text-red-500/5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="receipt" class="w-24 h-24"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Other Expenses</span>
+                            <h3 id="stat-expenses" class="text-2xl font-bold font-outfit text-slate-800 dark:text-white mt-2">LKR 0.00</h3>
+                            <div class="flex items-center gap-1 text-red-500 text-xs font-semibold mt-2">
+                                <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                                <span>Operational expenses</span>
+                            </div>
+                        </div>
+
+                        <!-- Net Profit Card -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-indigo-500/10 dark:text-indigo-500/5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="award" class="w-24 h-24"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Net Profit</span>
+                            <h3 id="stat-profit" class="text-2xl font-bold font-outfit text-indigo-600 dark:text-indigo-400 mt-2">LKR 0.00</h3>
+                            <div class="flex items-center gap-1 text-indigo-500 text-xs font-semibold mt-2">
+                                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                                <span>Sales - COGS - Expenses</span>
+                            </div>
+                        </div>
+
+                        <!-- Low Stock Warnings Card -->
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-rose-500/10 dark:text-rose-500/5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="alert-triangle" class="w-24 h-24"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Low Stock Alerts</span>
+                            <h3 id="stat-low-stock" class="text-2xl font-bold font-outfit text-rose-600 dark:text-rose-500 mt-2">0 Items</h3>
+                            <div class="flex items-center gap-1 text-rose-500 text-xs font-semibold mt-2">
+                                <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                                <span>Below reorder level</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Revenue vs Purchases Trend Line -->
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col h-[380px]">
+                            <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
+                                <i data-lucide="calendar" class="w-4 h-4 text-brand-500"></i>
+                                <span>Sales & Purchases Performance Trend</span>
+                            </h4>
+                            <div class="flex-1 min-h-0 relative">
+                                <canvas id="chart-performance-trend"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Sale Mode Split Doughnut -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col h-[380px]">
+                            <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
+                                <i data-lucide="pie-chart" class="w-4 h-4 text-violet-500"></i>
+                                <span>Retail vs Wholesale Sales Value</span>
+                            </h4>
+                            <div class="flex-1 min-h-0 flex items-center justify-center relative">
+                                <canvas id="chart-sales-split"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alerts and Low Stock Table -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden">
+                        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                            <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-500 animate-pulse"></i>
+                                <span>Critical Inventory & Reorder Warnings</span>
+                            </h4>
+                            <span class="px-2.5 py-1 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 text-xs font-semibold rounded-full" id="lbl-lowstock-badge">0 Alerts</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                        <th class="py-3.5 px-6">SKU</th>
+                                        <th class="py-3.5 px-6">Product Name</th>
+                                        <th class="py-3.5 px-6">Category</th>
+                                        <th class="py-3.5 px-6 text-right">Cost Price</th>
+                                        <th class="py-3.5 px-6 text-center font-bold">Min Stock</th>
+                                        <th class="py-3.5 px-6 text-center font-bold">Stock Quantity</th>
+                                        <th class="py-3.5 px-6 text-center">Status</th>
+                                        <th class="py-3.5 px-6 text-center">Quick Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-lowstock-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-8 text-slate-400 dark:text-slate-500">
+                                            <i data-lucide="check-circle" class="w-8 h-8 mx-auto mb-2 text-emerald-500"></i>
+                                            <span>All products are well stocked. Excellent!</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== POS TERMINAL VIEW ==================== -->
+                <div id="view-pos" class="tab-view hidden grid grid-cols-1 xl:grid-cols-12 gap-6 h-[calc(100vh-8.5rem)] overflow-hidden">
+                    <!-- Products Selection Panel -->
+                    <div class="xl:col-span-7 flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden">
+                        
+                        <!-- Search and Category Headers -->
+                        <div class="p-5 border-b border-slate-100 dark:border-slate-800/80 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex-1">
+                                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                                    <input type="text" id="pos-search" placeholder="Scan barcode or type SKU / item name..." class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                </div>
+                                <select id="pos-filter-category" class="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Products Grid -->
+                        <div class="flex-1 overflow-y-auto p-5">
+                            <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                <!-- Dynamic products will append here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Billing Cart Panel -->
+                    <div class="xl:col-span-5 flex flex-col h-full bg-slate-900 text-white rounded-2xl shadow-xl overflow-hidden relative">
+                        
+                        <!-- Cart Header -->
+                        <div class="p-5 border-b border-slate-800 bg-slate-950/50 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <span class="font-outfit font-bold text-base text-brand-400 tracking-wide uppercase">Billing Cart</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="pos-invoice-no" class="text-xs bg-slate-800 px-2 py-1 rounded text-slate-300 font-mono">INV-000000</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Wholesale vs Retail Mode Selector -->
+                            <div class="grid grid-cols-2 gap-1.5 bg-slate-800/80 p-1 rounded-xl">
+                                <button id="btn-pos-retail" class="py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-brand-600 text-white shadow-sm">
+                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                    <span>Retail Sale</span>
+                                </button>
+                                <button id="btn-pos-wholesale" class="py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 hover:bg-slate-800 text-slate-400 hover:text-white">
+                                    <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                                    <span>Wholesale Sale</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Customer Selection -->
+                            <div class="flex items-center gap-2">
+                                <select id="pos-customer-select" class="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 text-white">
+                                    <option value="walkin">Walk-in Customer</option>
+                                    <!-- Dynamic wholesale customers will load here -->
+                                </select>
+                                <button id="btn-pos-add-customer" class="p-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 transition-colors" title="Quick Add Customer">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Items List -->
+                        <div id="pos-cart-items" class="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-slate-800">
+                            <!-- Dynamic items in cart -->
+                            <div class="h-full flex flex-col items-center justify-center text-slate-500 py-10">
+                                <i data-lucide="shopping-bag" class="w-12 h-12 mb-3 text-slate-600"></i>
+                                <span class="text-sm font-medium">Cart is empty</span>
+                                <span class="text-xs text-slate-600 mt-1">Click items on the left to add</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Calculations & Checkout -->
+                        <div class="p-5 border-t border-slate-800 bg-slate-950/50 space-y-4">
+                            <!-- Discount, Tax inputs -->
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Discount (Amt or %)</label>
+                                    <div class="relative">
+                                        <input type="text" id="pos-discount" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:ring-1 focus:ring-brand-500 font-semibold text-right">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Tax (%)</label>
+                                    <input type="number" id="pos-tax" value="0" min="0" max="100" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:ring-1 focus:ring-brand-500 font-semibold text-right">
+                                </div>
+                            </div>
+                            
+                            <!-- Financial Summary -->
+                            <div class="space-y-1.5 text-sm border-t border-slate-800/80 pt-3">
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Subtotal</span>
+                                    <span id="pos-summary-subtotal" class="font-mono text-white">LKR 0.00</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Discount (-<span id="pos-lbl-discount-perc">0%</span>)</span>
+                                    <span id="pos-summary-discount" class="font-mono text-red-400">-LKR 0.00</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Tax</span>
+                                    <span id="pos-summary-tax" class="font-mono text-white">LKR 0.00</span>
+                                </div>
+                                <div class="flex justify-between font-outfit font-bold text-lg border-t border-slate-800/50 pt-2.5">
+                                    <span class="text-brand-400">Total Net Bill</span>
+                                    <span id="pos-summary-total" class="font-mono text-white text-xl">LKR 0.00</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Mode & Checkout Actions -->
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Payment Method</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button data-pay="cash" class="btn-pay-method active py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 flex items-center justify-center gap-1">
+                                            <i data-lucide="coins" class="w-3.5 h-3.5"></i>
+                                            <span>Cash</span>
+                                        </button>
+                                        <button data-pay="card" class="btn-pay-method py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 flex items-center justify-center gap-1">
+                                            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                                            <span>Card</span>
+                                        </button>
+                                        <button data-pay="credit" id="btn-pay-credit" class="btn-pay-method py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 flex items-center justify-center gap-1">
+                                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                                            <span>Credit A/C</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-12 gap-3.5 pt-1.5">
+                                    <button id="btn-pos-clear" class="col-span-3 py-3 border border-slate-700 hover:border-red-500/50 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-xl transition-all font-medium text-sm flex items-center justify-center">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                    <button id="btn-pos-checkout" class="col-span-9 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 font-bold text-sm text-white rounded-xl shadow-lg shadow-brand-500/10 transition-all flex items-center justify-center gap-2">
+                                        <i data-lucide="printer" class="w-4 h-4"></i>
+                                        <span>Print & Complete Invoice</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== INVENTORY VIEW ==================== -->
+                <div id="view-inventory" class="tab-view hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="relative flex-1 sm:w-80">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                                <input type="text" id="inventory-search" placeholder="Search by SKU, item name..." class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all shadow-sm">
+                            </div>
+                            <select id="inventory-filter-category" class="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all shadow-sm">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <button id="btn-add-product" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-xl font-semibold text-sm shadow-md shadow-brand-500/10 transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Add New Product</span>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                        <th class="py-3.5 px-6">SKU</th>
+                                        <th class="py-3.5 px-6">Product Name</th>
+                                        <th class="py-3.5 px-6">Category</th>
+                                        <th class="py-3.5 px-6 text-right">Cost Price</th>
+                                        <th class="py-3.5 px-6 text-right font-semibold text-brand-600 dark:text-brand-400">Retail Price</th>
+                                        <th class="py-3.5 px-6 text-right font-semibold text-violet-600 dark:text-violet-400">Wholesale Price</th>
+                                        <th class="py-3.5 px-6 text-center">Stock Count</th>
+                                        <th class="py-3.5 px-6 text-center">Reorder Lvl</th>
+                                        <th class="py-3.5 px-6 text-center">Status</th>
+                                        <th class="py-3.5 px-6 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                    <!-- Dynamic items list -->
+                                    <tr>
+                                        <td colspan="10" class="text-center py-10 text-slate-400">No items available. Click Add Product to start.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== PURCHASES VIEW ==================== -->
+                <div id="view-purchases" class="tab-view hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- New Purchase Bill Entry -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm self-start space-y-5">
+                        <h3 class="font-outfit font-bold text-base text-slate-800 dark:text-white">Record Purchase Bill</h3>
+                        
+                        <form id="purchase-bill-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Bill Reference No / Invoice No</label>
+                                <input type="text" id="purch-bill-no" required placeholder="e.g. BILL-9872" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Supplier</label>
+                                <div class="flex items-center gap-2">
+                                    <select id="purch-supplier" required class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                        <option value="">Select Supplier</option>
+                                    </select>
+                                    <button type="button" id="btn-add-supplier" class="p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-slate-300 rounded-xl text-slate-500" title="Quick Add Supplier">
+                                        <i data-lucide="plus" class="w-4.5 h-4.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1 font-semibold text-brand-600 dark:text-brand-400">Select Product to Restock</label>
+                                <select id="purch-product" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                    <option value="">-- Choose Item --</option>
+                                </select>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Unit Cost Price (LKR)</label>
+                                    <input type="number" step="0.01" min="0" id="purch-cost" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Restock Quantity</label>
+                                    <input type="number" min="1" id="purch-qty" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Retail Selling Price</label>
+                                    <input type="number" step="0.01" min="0" id="purch-retail-price" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all text-right" placeholder="New Retail price">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Wholesale Selling Price</label>
+                                    <input type="number" step="0.01" min="0" id="purch-wholesale-price" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all text-right" placeholder="New Wholesale price">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Payment Status</label>
+                                <div class="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl">
+                                    <button type="button" id="btn-purch-paid" class="py-2 text-xs font-bold rounded-lg transition-all bg-emerald-600 text-white shadow-sm flex items-center justify-center gap-1">
+                                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        <span>Paid (Cash/Bank)</span>
+                                    </button>
+                                    <button type="button" id="btn-purch-credit" class="py-2 text-xs font-bold rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1">
+                                        <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                        <span>Supplier Credit</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/10 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i>
+                                <span>Save and Add Stock</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Purchase History Ledger -->
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[600px]">
+                        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80">
+                            <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-4.5 h-4.5 text-brand-500"></i>
+                                <span>Recent Purchase Bills Ledger</span>
+                            </h4>
+                        </div>
+                        
+                        <div class="overflow-x-auto flex-1">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                        <th class="py-3.5 px-6">Date</th>
+                                        <th class="py-3.5 px-6">Bill Reference</th>
+                                        <th class="py-3.5 px-6">Product</th>
+                                        <th class="py-3.5 px-6 text-right">Cost Price</th>
+                                        <th class="py-3.5 px-6 text-center font-bold">Qty</th>
+                                        <th class="py-3.5 px-6 text-right font-bold">Total Bill</th>
+                                        <th class="py-3.5 px-6">Supplier</th>
+                                        <th class="py-3.5 px-6 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="purchases-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-10 text-slate-400">No purchase invoices recorded yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== ACCOUNTS LEDGER VIEW ==================== -->
+                <div id="view-ledger" class="tab-view hidden space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Wholesale Customers Accounts Receivable -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[520px]">
+                            <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                                <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <i data-lucide="arrow-down-left" class="w-4.5 h-4.5 text-emerald-500"></i>
+                                    <span>Accounts Receivable (Wholesale Customers)</span>
+                                </h4>
+                                <span id="ledger-receivable-total" class="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-bold text-xs rounded-full">Total: LKR 0.00</span>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-3 px-6">Customer</th>
+                                            <th class="py-3 px-6">Contact</th>
+                                            <th class="py-3 px-6 text-right font-bold">Outstanding Balance</th>
+                                            <th class="py-3 px-6 text-center">Settlement Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ledger-customers-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                        <!-- customer list -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Suppliers Accounts Payable -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[520px]">
+                            <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                                <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <i data-lucide="arrow-up-right" class="w-4.5 h-4.5 text-amber-500"></i>
+                                    <span>Accounts Payable (Suppliers)</span>
+                                </h4>
+                                <span id="ledger-payable-total" class="px-3 py-1 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-bold text-xs rounded-full">Total: LKR 0.00</span>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-3 px-6">Supplier</th>
+                                            <th class="py-3 px-6">Contact</th>
+                                            <th class="py-3 px-6 text-right font-bold">Outstanding Balance</th>
+                                            <th class="py-3 px-6 text-center">Settle Payment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ledger-suppliers-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                        <!-- supplier list -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== REPORTS VIEW ==================== -->
+                <div id="view-reports" class="tab-view hidden space-y-6">
+                    <!-- Reports Sub Navigation -->
+                    <div class="flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-px overflow-x-auto whitespace-nowrap">
+                        <button data-report-tab="pl" class="report-tab-btn active px-4 py-2.5 text-sm font-semibold border-b-2 border-brand-500 text-brand-600 dark:text-brand-400">Profit & Loss (P&L) Statement</button>
+                        <button data-report-tab="sales" class="report-tab-btn px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">Sales Invoices Log</button>
+                        <button data-report-tab="expenses" class="report-tab-btn px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">Operational Expenses (OPEX)</button>
+                        <button data-report-tab="stock" class="report-tab-btn px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">Stock Valuation Report</button>
+                        <button data-report-tab="debtors-creditors" class="report-tab-btn px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">Debtors & Creditors</button>
+                    </div>
+                    
+                    <!-- 1. P&L Statement Section -->
+                    <div id="report-sec-pl" class="report-sec space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <input type="date" id="pl-date-from" class="px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm">
+                                <span class="text-xs text-slate-400">to</span>
+                                <input type="date" id="pl-date-to" class="px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm">
+                                <button id="btn-pl-filter" class="px-3.5 py-1.5 bg-slate-800 dark:bg-slate-700 text-white text-xs font-semibold rounded-xl">Apply</button>
+                            </div>
+                            <button id="btn-print-pl" class="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-semibold text-xs transition-colors">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                <span>Print P&L Statement</span>
+                            </button>
+                        </div>
+                        
+                        <!-- P&L Sheet Layout -->
+                        <div id="pl-print-area" class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 shadow-md max-w-3xl mx-auto space-y-6 text-slate-800 dark:text-slate-100">
+                            <!-- Statement Header -->
+                            <div class="text-center pb-6 border-b border-slate-100 dark:border-slate-800/80">
+                                <img src="logo.png" alt="ABC Logo" class="h-16 mx-auto mb-3 object-contain">
+                                <h2 class="font-outfit font-extrabold text-2xl text-slate-900 dark:text-white uppercase tracking-wide">ABC PVT.LTD</h2>
+                                <h3 class="text-xs font-semibold text-brand-500 uppercase tracking-widest mt-1">Supermarket Business P&L Statement</h3>
+                                <p id="pl-statement-period" class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium">Reporting Period: Cumulative (All Time)</p>
+                            </div>
+                            
+                            <!-- Financial Calculation Layout -->
+                            <div class="space-y-4 font-medium text-sm">
+                                
+                                <!-- REVENUE SECTION -->
+                                <div class="space-y-2">
+                                    <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/40 pb-1 text-slate-400 uppercase text-xs font-bold tracking-wider">
+                                        <span>Operating Revenue</span>
+                                        <span>Amount (LKR)</span>
+                                    </div>
+                                    <div class="flex justify-between pl-4 text-slate-600 dark:text-slate-300">
+                                        <span>Retail Sales Revenue</span>
+                                        <span id="pl-val-sales-retail" class="font-mono">0.00</span>
+                                    </div>
+                                    <div class="flex justify-between pl-4 text-slate-600 dark:text-slate-300">
+                                        <span>Wholesale Sales Revenue</span>
+                                        <span id="pl-val-sales-wholesale" class="font-mono">0.00</span>
+                                    </div>
+                                    <div class="flex justify-between font-bold text-slate-950 dark:text-white pt-1.5 border-t border-slate-100 dark:border-slate-800/20">
+                                        <span>NET REVENUE (A)</span>
+                                        <span id="pl-val-revenue-total" class="font-mono">0.00</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- COST OF GOODS SOLD SECTION -->
+                                <div class="space-y-2 pt-4">
+                                    <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/40 pb-1 text-slate-400 uppercase text-xs font-bold tracking-wider">
+                                        <span>Cost of Goods Sold (COGS)</span>
+                                        <span></span>
+                                    </div>
+                                    <div class="flex justify-between pl-4 text-slate-600 dark:text-slate-300">
+                                        <span>Inventory Stock Cost (Cost value of sold units)</span>
+                                        <span id="pl-val-cogs" class="font-mono">0.00</span>
+                                    </div>
+                                    <div class="flex justify-between font-bold text-slate-950 dark:text-white pt-1.5 border-t border-slate-100 dark:border-slate-800/20">
+                                        <span>TOTAL COST OF GOODS SOLD (B)</span>
+                                        <span id="pl-val-cogs-total" class="font-mono text-red-500">0.00</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- GROSS PROFIT -->
+                                <div class="flex justify-between font-outfit font-bold text-base bg-slate-50 dark:bg-slate-950/60 p-4 rounded-xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800/50 mt-4">
+                                    <span>GROSS PROFIT (C = A - B)</span>
+                                    <span id="pl-val-gross-profit" class="font-mono text-emerald-600 dark:text-emerald-400">0.00</span>
+                                </div>
+                                
+                                <!-- OPERATIONAL EXPENSES -->
+                                <div class="space-y-2 pt-4">
+                                    <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/40 pb-1 text-slate-400 uppercase text-xs font-bold tracking-wider">
+                                        <span>Other Operational Expenses (OPEX)</span>
+                                        <span></span>
+                                    </div>
+                                    <div id="pl-expenses-list" class="space-y-2 pl-4 text-slate-600 dark:text-slate-300">
+                                        <!-- dynamic expenses items -->
+                                    </div>
+                                    <div class="flex justify-between font-bold text-slate-950 dark:text-white pt-1.5 border-t border-slate-100 dark:border-slate-800/20">
+                                        <span>TOTAL OPERATIONAL EXPENSES (D)</span>
+                                        <span id="pl-val-expenses-total" class="font-mono text-red-500">0.00</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- NET PROFIT -->
+                                <div class="flex justify-between font-outfit font-extrabold text-lg bg-indigo-50 dark:bg-indigo-950/30 p-5 rounded-2xl text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/30 mt-6">
+                                    <span>NET PROFIT / LOSS (E = C - D)</span>
+                                    <span id="pl-val-net-profit" class="font-mono text-xl">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. Sales History Log Section -->
+                    <div id="report-sec-sales" class="report-sec hidden space-y-6">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[520px]">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-3.5 px-6">Invoice No</th>
+                                            <th class="py-3.5 px-6">Date</th>
+                                            <th class="py-3.5 px-6">Customer</th>
+                                            <th class="py-3.5 px-6 text-center">Type</th>
+                                            <th class="py-3.5 px-6 text-center">Payment</th>
+                                            <th class="py-3.5 px-6 text-right font-bold">Subtotal</th>
+                                            <th class="py-3.5 px-6 text-right font-bold">Discount</th>
+                                            <th class="py-3.5 px-6 text-right font-bold">Tax</th>
+                                            <th class="py-3.5 px-6 text-right font-bold">Total Paid</th>
+                                            <th class="py-3.5 px-6 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-log-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                        <!-- sales logs -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 3. Expenses Section -->
+                    <div id="report-sec-expenses" class="report-sec hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Add expense card -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm self-start space-y-4">
+                            <h3 class="font-outfit font-bold text-base text-slate-800 dark:text-white">Record OPEX Expense</h3>
+                            <form id="expense-bill-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Expense Type / Category</label>
+                                    <select id="exp-category" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                        <option value="Rent">Shop Rent</option>
+                                        <option value="Electricity">Electricity Bill</option>
+                                        <option value="Water">Water & Utility Bill</option>
+                                        <option value="Salaries">Staff Salaries</option>
+                                        <option value="Marketing">Marketing / Promo</option>
+                                        <option value="Wastage">Stock Wastage/Damage</option>
+                                        <option value="Other">Other Expenses</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Description / Remarks</label>
+                                    <input type="text" id="exp-desc" placeholder="e.g. Electricity bill for April 2026" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Expense Amount (LKR)</label>
+                                    <input type="number" step="0.01" min="0.01" id="exp-amount" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                                </div>
+                                <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all">
+                                    Add Expense Record
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Expense List Ledger -->
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[480px]">
+                            <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80">
+                                <h4 class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300">Operational Expenses Log</h4>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-3 px-6">Date</th>
+                                            <th class="py-3 px-6">Category</th>
+                                            <th class="py-3 px-6">Description</th>
+                                            <th class="py-3 px-6 text-right font-bold">Amount</th>
+                                            <th class="py-3 px-6 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expenses-log-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-sm">
+                                        <!-- expenses log lists -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Stock Valuation Report Section -->
+                    <div id="report-sec-stock" class="report-sec hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <h4 class="font-outfit font-bold text-sm text-slate-700 dark:text-slate-300">Inventory Stock Valuation Sheet</h4>
+                            </div>
+                            <button id="btn-print-stock" class="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-semibold text-xs transition-colors">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                <span>Print Stock Valuation</span>
+                            </button>
+                        </div>
+                        
+                        <div id="stock-print-area" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden p-6 space-y-6">
+                            <!-- Stock Header for Print -->
+                            <div class="hidden print:block text-center pb-4 border-b border-slate-100 dark:border-slate-850">
+                                <h2 class="font-outfit font-extrabold text-2xl uppercase">ABC PVT.LTD</h2>
+                                <h3 class="text-xs font-semibold text-brand-500 uppercase tracking-widest mt-1">Supermarket Stock Valuation Sheet</h3>
+                                <p class="text-[10px] text-slate-400 mt-1 font-mono">Date Generated: <span class="lbl-gen-date"></span></p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold">
+                                <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-805/60">
+                                    <span class="text-slate-400 block mb-1">Total Valuation (at Cost)</span>
+                                    <span id="stock-rpt-val-cost" class="text-base font-bold font-mono text-slate-800 dark:text-slate-200">LKR 0.00</span>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-805/60">
+                                    <span class="text-slate-400 block mb-1">Total Valuation (at Retail)</span>
+                                    <span id="stock-rpt-val-retail" class="text-base font-bold font-mono text-brand-600 dark:text-brand-400">LKR 0.00</span>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-805/60">
+                                    <span class="text-slate-400 block mb-1">Potential Retail Profit</span>
+                                    <span id="stock-rpt-profit" class="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">LKR 0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 font-semibold uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-2.5 px-4">SKU</th>
+                                            <th class="py-2.5 px-4">Product Name</th>
+                                            <th class="py-2.5 px-4 text-center">Stock Count</th>
+                                            <th class="py-2.5 px-4 text-right">Cost Price</th>
+                                            <th class="py-2.5 px-4 text-right font-bold">Total Cost Value</th>
+                                            <th class="py-2.5 px-4 text-right">Retail Price</th>
+                                            <th class="py-2.5 px-4 text-right font-bold text-brand-500">Retail Value</th>
+                                            <th class="py-2.5 px-4 text-right">Wholesale Price</th>
+                                            <th class="py-2.5 px-4 text-right font-bold text-violet-500">Wholesale Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stock-report-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 font-mono">
+                                        <!-- Dynamic stock rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Debtors & Creditors Report Section -->
+                    <div id="report-sec-debtors-creditors" class="report-sec hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <h4 class="font-outfit font-bold text-sm text-slate-700 dark:text-slate-300">Trade Receivables & Payables Ledger</h4>
+                            </div>
+                            <button id="btn-print-dc" class="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-semibold text-xs transition-colors">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                <span>Print Receivables & Payables</span>
+                            </button>
+                        </div>
+                        
+                        <div id="dc-print-area" class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm">
+                            <!-- Debtors Header for Print -->
+                            <div class="hidden print:block col-span-full text-center pb-4 border-b border-slate-100 dark:border-slate-850 mb-4">
+                                <h2 class="font-outfit font-extrabold text-2xl uppercase">ABC PVT.LTD</h2>
+                                <h3 class="text-xs font-semibold text-brand-500 uppercase tracking-widest mt-1">Supermarket Trade Debtors & Creditors</h3>
+                                <p class="text-[10px] text-slate-400 mt-1 font-mono">Date Generated: <span class="lbl-gen-date"></span></p>
+                            </div>
+                            
+                            <!-- Trade Debtors Table -->
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+                                    <h5 class="font-outfit font-bold text-xs text-slate-400 uppercase">Trade Debtors (Accounts Receivable)</h5>
+                                    <span id="dc-debtors-total" class="font-mono text-xs font-bold text-rose-600 dark:text-rose-400">Total: LKR 0.00</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse text-xs">
+                                        <thead>
+                                            <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 font-semibold uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                                <th class="py-2 px-3">Customer Name</th>
+                                                <th class="py-2 px-3">Contact</th>
+                                                <th class="py-2 px-3 text-right">Outstanding Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dc-debtors-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 font-mono">
+                                            <!-- trade debtors items -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Trade Creditors Table -->
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+                                    <h5 class="font-outfit font-bold text-xs text-slate-400 uppercase">Trade Creditors (Accounts Payable)</h5>
+                                    <span id="dc-creditors-total" class="font-mono text-xs font-bold text-rose-600 dark:text-rose-400">Total: LKR 0.00</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse text-xs">
+                                        <thead>
+                                            <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 font-semibold uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                                <th class="py-2 px-3">Supplier Name</th>
+                                                <th class="py-2 px-3">Contact</th>
+                                                <th class="py-2 px-3 text-right">Outstanding Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dc-creditors-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 font-mono">
+                                            <!-- trade creditors items -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== CHART OF ACCOUNTS VIEW ==================== -->
+                <div id="view-coa" class="tab-view hidden space-y-6">
+                    <!-- Tree container and drilldown ledger panel -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Accounts Tree -->
+                        <div class="lg:col-span-7 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-y-auto h-[620px]">
+                            <h3 class="font-outfit font-bold text-base text-slate-800 dark:text-white mb-6">General Ledger Chart of Accounts</h3>
+                            <div id="coa-tree" class="space-y-4">
+                                <!-- Dynamic tree nodes go here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Account Details Sub-Ledger -->
+                        <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[620px]">
+                            <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/20">
+                                <h4 id="coa-ledger-title" class="font-outfit font-semibold text-sm text-slate-700 dark:text-slate-300">Account Sub-Ledger Drilldown</h4>
+                                <p id="coa-ledger-subtitle" class="text-xs text-slate-400 mt-1">Select an account from the chart to view journal entries</p>
+                            </div>
+                            <div class="overflow-x-auto flex-1 text-slate-800 dark:text-slate-100">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 dark:bg-slate-950/40 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-wider uppercase border-b border-slate-100 dark:border-slate-800/50">
+                                            <th class="py-2.5 px-4">Date</th>
+                                            <th class="py-2.5 px-4">Description</th>
+                                            <th class="py-2.5 px-4 text-right">Debit</th>
+                                            <th class="py-2.5 px-4 text-right">Credit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="coa-ledger-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-xs font-mono">
+                                        <tr>
+                                            <td colspan="4" class="text-center py-10 text-slate-400">Click on any account in the chart to inspect transactions.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </main>
+        </div>
+    </div>
+    
+    <!-- ==================== DIALOG MODALS ==================== -->
+    
+    <!-- 1. Print Receipt Bill Modal -->
+    <div id="modal-receipt" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800 max-h-[90vh]">
+            <div class="p-6 overflow-y-auto" id="receipt-print-area">
+                <!-- Inner Receipt Styling -->
+                <div class="text-center font-mono text-xs space-y-1 text-slate-800 dark:text-slate-200">
+                    <img src="logo.png" alt="ABC Logo" class="h-12 mx-auto mb-2 object-contain">
+                    <h3 class="font-outfit font-bold text-lg text-slate-950 dark:text-white uppercase leading-none tracking-wide">ABC PVT.LTD</h3>
+                    <p class="text-[10px]">Colombo Road, Negombo, Sri Lanka</p>
+                    <p class="text-[10px]">Tel: +94 31 223 4567</p>
+                    <div class="border-t border-dashed border-slate-400 my-2.5"></div>
+                    
+                    <div class="text-left space-y-0.5 text-[10px]">
+                        <p><span class="font-bold">Date:</span> <span id="rec-date">24-05-2026 12:30 PM</span></p>
+                        <p><span class="font-bold">Invoice:</span> <span id="rec-invoice">INV-000492</span></p>
+                        <p><span class="font-bold">Customer:</span> <span id="rec-customer">Walk-in</span></p>
+                        <p><span class="font-bold">Sales Mode:</span> <span id="rec-mode">Retail</span></p>
+                        <p><span class="font-bold">Payment:</span> <span id="rec-pay">Cash</span></p>
+                    </div>
+                    
+                    <div class="border-t border-dashed border-slate-400 my-2.5"></div>
+                    
+                    <!-- Itemized List Table -->
+                    <table class="w-full text-left text-[10px]">
+                        <thead>
+                            <tr class="font-bold border-b border-dashed border-slate-400">
+                                <th class="pb-1">Item Description</th>
+                                <th class="pb-1 text-center">Qty</th>
+                                <th class="pb-1 text-right">Price</th>
+                                <th class="pb-1 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rec-items-tbody">
+                            <!-- receipts item items -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="border-t border-dashed border-slate-400 my-2.5"></div>
+                    
+                    <!-- Totals -->
+                    <div class="space-y-0.5 text-[10px] text-right font-semibold">
+                        <div class="flex justify-between">
+                            <span>Subtotal:</span>
+                            <span id="rec-subtotal">LKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between text-red-500">
+                            <span>Discount:</span>
+                            <span id="rec-discount">-LKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Tax:</span>
+                            <span id="rec-tax">LKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-xs pt-1 border-t border-slate-400">
+                            <span>NET TOTAL:</span>
+                            <span id="rec-total" class="text-slate-950 dark:text-white">LKR 0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-dashed border-slate-400 my-3"></div>
+                    
+                    <!-- Footer barcode placeholder -->
+                    <div class="flex flex-col items-center justify-center gap-1 my-2">
+                        <div class="h-8 w-40 bg-slate-300 dark:bg-slate-700 flex items-center justify-center font-bold text-[8px] tracking-[4px] text-slate-800 dark:text-slate-200">
+                            ||| | ||| || ||| || |||
+                        </div>
+                        <span class="text-[9px] uppercase tracking-wide">Thank You! Come Again!</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 flex gap-3">
+                <button id="btn-close-receipt" class="flex-1 py-2 text-xs font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors">
+                    Close
+                </button>
+                <button id="btn-print-receipt" class="flex-1 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-md transition-colors flex items-center justify-center gap-1">
+                    <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                    <span>Print Receipt</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. Product Add/Edit Dialog -->
+    <div id="modal-product" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 text-slate-850 dark:text-slate-100 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800/80">
+                <h3 id="product-modal-title" class="font-outfit font-bold text-base">Add New Product</h3>
+            </div>
+            
+            <form id="product-form" class="p-6 space-y-4">
+                <input type="hidden" id="prod-index">
+                <div class="grid grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Product SKU / Barcode</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="prod-sku" required placeholder="e.g. SKU-1002" class="flex-1 min-w-0 px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                            <button type="button" id="btn-gen-sku" class="px-2.5 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-slate-300 rounded-xl text-xs font-semibold transition-colors" title="Auto-generate Item Code">Auto</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Category</label>
+                        <input type="text" id="prod-category" required placeholder="e.g. Grocery" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Product Name</label>
+                    <input type="text" id="prod-name" required placeholder="e.g. Keells Chicken Sausage 500g" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all">
+                </div>
+                
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Cost Price</label>
+                        <input type="number" step="0.01" min="0" id="prod-cost" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-brand-600 dark:text-brand-400 mb-1">Retail Price</label>
+                        <input type="number" step="0.01" min="0" id="prod-retail" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right text-brand-600 dark:text-brand-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-violet-600 dark:text-violet-400 mb-1">Wholesale Price</label>
+                        <input type="number" step="0.01" min="0" id="prod-wholesale" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right text-violet-600 dark:text-violet-400">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Initial Stock Count</label>
+                        <input type="number" min="0" id="prod-qty" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Min Reorder Lvl</label>
+                        <input type="number" min="0" id="prod-reorder" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm transition-all font-semibold text-right">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button type="button" id="btn-close-product" class="flex-1 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-md transition-colors">
+                        Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 3. Record Ledger Transaction Dialog (Pay / Receive) -->
+    <div id="modal-ledger" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 text-slate-850 dark:text-slate-100 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800/80">
+                <h3 id="ledger-modal-title" class="font-outfit font-bold text-base">Record Outstanding Settlement</h3>
+            </div>
+            
+            <form id="ledger-form" class="p-6 space-y-4">
+                <input type="hidden" id="led-contact-id">
+                <input type="hidden" id="led-contact-type">
+                
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Entity Name</label>
+                    <input type="text" id="led-contact-name" readonly class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold cursor-not-allowed">
+                </div>
+                
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Current Outstanding Balance (LKR)</label>
+                    <input type="text" id="led-contact-balance" readonly class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-mono font-bold text-right cursor-not-allowed">
+                </div>
+                
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Settlement Amount (LKR)</label>
+                    <input type="number" step="0.01" min="0.01" id="led-pay-amount" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm font-mono font-semibold text-right">
+                </div>
+                
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Settlement Details / Remarks</label>
+                    <input type="text" id="led-remarks" placeholder="e.g. Paid in full via Cheque" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl text-sm">
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button type="button" id="btn-close-ledger" class="flex-1 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl shadow-md transition-colors">
+                        Settle & Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="pos.js"></script>
+    <script src="purchases.js"></script>
+    <script src="inventory.js"></script>
+    <script src="ledger.js"></script>
+    <script src="reports.js"></script>
+    <script>
+        // Start initialization when page is loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            // Initialize database store
+            AppStore.init();
+            
+            // Initialize UI interactions
+            AppUI.init();
+            
+            // Refresh dashboard
+            DashboardView.init();
+            
+            // Initialize POS
+            POSView.init();
+            
+            // Initialize Inventory
+            InventoryView.init();
+            
+            // Initialize Purchases
+            PurchasesView.init();
+            
+            // Initialize Ledger
+            LedgerView.init();
+            
+            // Initialize Reports
+            ReportsView.init();
+            
+            // Re-render all SVG icons
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
